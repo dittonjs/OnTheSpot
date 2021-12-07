@@ -16,6 +16,6 @@ import { UserRole } from 'server/entities/user_role.entity';
   imports: [TypeOrmModule.forFeature([User, RefreshToken, Role, UserRole])],
   controllers: [SessionsController, UsersController, RefreshTokensController],
   providers: [UsersService, RolesService, RefreshTokensService, JwtService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, UsersService, RolesService, JwtService],
 })
 export class UsersModule {}
