@@ -32,7 +32,7 @@ export class RefreshTokensController {
       throw new HttpException('User refresh token not found', 401);
     }
 
-    const token = this.jwtService.issueToken({ userId: user.id, roles: roles.map((r) => r.key) });
+    const token = this.jwtService.issueToken({ userId: user.id, roles: roles.map((r) => r.key), contextId: 'base' });
     return { token };
   }
 }

@@ -49,6 +49,7 @@ export class UsersController {
     const [role] = await this.rolesService.findByKey(RoleKey.USER);
     const userRole = new UserRole();
     userRole.role = role;
+    userRole.contextId = 'base';
     newUser.userRoles = [userRole];
 
     try {
@@ -61,7 +62,7 @@ export class UsersController {
       // note the roles hard coded to just USER.
       // If you want to allow users to sign up as different roles then
       // you will need to update this here.
-      const token = this.jwtService.issueToken({ userId: user.id, roles: [RoleKey.USER] });
+      const token = this.jwtService.issueToken({ userId: user.id, roles: [RoleKey.USER], contextId: 'base' });
       const refreshJwtToken = this.jwtService.issueRefreshToken({ id: refreshToken.id, userId: user.id });
 
       // only refresh token should go in the cookie

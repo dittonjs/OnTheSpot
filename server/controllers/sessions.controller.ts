@@ -42,7 +42,11 @@ export class SessionsController {
     const userRoles = await this.rolesService.findByIds(user.userRoles.map((ur) => ur.roleId));
 
     // JWT gets sent with response
-    const token = this.jwtService.issueToken({ userId: user.id, roles: userRoles.map((r) => r.key) });
+    const token = this.jwtService.issueToken({
+      userId: user.id,
+      roles: userRoles.map((r) => r.key),
+      contextId: 'base',
+    });
 
     const refreshJwtToken = this.jwtService.issueRefreshToken({ id: refreshToken.id, userId: user.id });
 

@@ -16,6 +16,12 @@ export class User {
   @Column({ nullable: false })
   lastName: string;
 
+  @Column()
+  lmsUserId: string;
+
+  @Column()
+  lmsEmail: string;
+
   @Column({ nullable: false })
   passwordHash: string;
 

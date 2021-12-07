@@ -8,6 +8,9 @@ export class UserRole {
   id: number;
 
   @Column()
+  contextId: string;
+
+  @Column()
   roleId: number;
 
   @Column()

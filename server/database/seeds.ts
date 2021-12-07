@@ -39,6 +39,7 @@ export default class Seeds implements Seeder {
       adminUser.firstName = 'Admin';
       adminUser.lastName = 'Site';
       const adminUserRole = new UserRole();
+      adminUserRole.contextId = 'base';
       adminUserRole.role = adminRole;
       adminUser.userRoles = [adminUserRole];
       await userRepository.save(adminUser);
