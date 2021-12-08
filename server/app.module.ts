@@ -3,6 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { config } from './database/config';
+import { ApiModule } from './modules/api.module';
 import { LTILaunchesModule } from './modules/lti_launches.module';
 import { UsersModule } from './modules/users.module';
 import { AuthGuard } from './providers/guards/auth.guard';
@@ -13,7 +14,7 @@ import { UsersService } from './providers/services/users.service';
 import { GuardUtil } from './providers/util/guard.util';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), UsersModule, LTILaunchesModule],
+  imports: [TypeOrmModule.forRoot(config), UsersModule, LTILaunchesModule, ApiModule],
   controllers: [AppController],
   providers: [
     UsersService,

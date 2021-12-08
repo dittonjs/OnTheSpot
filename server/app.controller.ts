@@ -7,5 +7,10 @@ export class AppController {
   @Get()
   @Render('index')
   @Skip(AuthGuard)
-  index() {}
+  index() {
+    const settings = {
+      isLTI: false,
+    };
+    return { data: JSON.stringify(settings) };
+  }
 }

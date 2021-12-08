@@ -1,21 +1,55 @@
-import { Body, Controller, Get, HttpException, Post, Render, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
-import { UsersService } from 'server/providers/services/users.service';
-import { SignInDto } from 'server/dto/sign_in.dto';
-import { RefreshTokenBody } from 'server/dto/refresh_token_body.dto';
+import { Body, Controller, Param, Post, Render, UseGuards } from '@nestjs/common';
 import { JwtService } from 'server/providers/services/jwt.service';
 import { Skip } from 'server/decorators/skip.decorator';
 import { AuthGuard } from 'server/providers/guards/auth.guard';
-import { RolesService } from 'server/providers/services/roles.service';
 import { LTIGuard } from 'server/providers/guards/lti.guard';
+import { UserObj } from 'server/decorators/user.decorator';
+import { LTILaunchDto } from 'server/dto/lti_launch.dto';
+import { RoleKey } from 'server/entities/role.entity';
+import { LTILaunchService } from 'server/providers/services/lti_launch.service';
+import { User } from 'server/entities/user.entity';
 
 // this is kind of a misnomer because we are doing token based auth
 // instead of session based auth
 @Controller()
 export class LTILaunchesController {
+  constructor(private jwtService: JwtService, private ltiLaunchesService: LTILaunchService) {}
+
   @Post('/lti_launches')
   @Skip(AuthGuard)
   @UseGuards(LTIGuard)
   @Render('index')
-  async index() {}
+  async index(@Body() body: LTILaunchDto, @UserObj() user) {
+    const settings = {
+      isLTI: true,
+      ltiLaunchParams: body,
+      jwt: this.jwtService.issueToken({
+        userId: user.id,
+        contextId: body.context_id,
+        roles: body.ext_roles.split(',') as RoleKey[],
+        contentItemReturnUrl: body.content_item_return_url,
+      }),
+    };
+    return { data: JSON.stringify(settings) };
+  }
+
+  @Post('/lti_launches/:token')
+  @Skip(AuthGuard)
+  @UseGuards(LTIGuard)
+  @Render('index')
+  async show(@Param('token') token: string, @Body() body: LTILaunchDto, @UserObj() user: User) {
+    const ltiLaunchConfig = await this.ltiLaunchesService.findByToken(token);
+    const settings = {
+      isLTI: true,
+      ltiLaunchParams: body,
+      jwt: this.jwtService.issueToken({
+        userId: user.id,
+        contextId: body.context_id,
+        roles: body.ext_roles.split(',') as RoleKey[],
+        contentItemReturnUrl: body.content_item_return_url,
+      }),
+      ltiLaunchConfig,
+    };
+    return { data: JSON.stringify(settings) };
+  }
 }

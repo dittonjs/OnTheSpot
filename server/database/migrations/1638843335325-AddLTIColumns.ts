@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
 
 export class AddLTIColumns1638843335325 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.addColumn(
+    await queryRunner.addColumn(
       'user_role',
       new TableColumn({
         name: 'contextId',
@@ -10,14 +10,16 @@ export class AddLTIColumns1638843335325 implements MigrationInterface {
       }),
     );
 
-    queryRunner.addColumns('user', [
+    await queryRunner.addColumns('user', [
       new TableColumn({
         name: 'lmsUserId',
         type: 'text',
+        isNullable: true,
       }),
       new TableColumn({
         name: 'lmsEmail',
         type: 'text',
+        isNullable: true,
       }),
     ]);
   }

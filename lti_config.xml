@@ -11,7 +11,6 @@
       <lticm:property name="text">Nest LTI Starter App DEV</lticm:property>
       <lticm:property name="url">https://localhost:3000/lti_launches</lticm:property>
       <lticm:property name="visibility">admins</lticm:property>
-      <lticm:property name="windowTarget"/>
     </lticm:options>
     <lticm:options name="assignment_selection">
       <lticm:property name="canvas_icon_class">icon-lti</lticm:property>
