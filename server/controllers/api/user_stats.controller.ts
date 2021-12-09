@@ -40,7 +40,6 @@ export class UserStatsController {
 
     const allData: UserInfo[] = Object.values(usersDict);
 
-
     // sort based on times chosen
     allData.sort((v1: UserInfo, v2: UserInfo) => {
       if (!v1.userStat) {
