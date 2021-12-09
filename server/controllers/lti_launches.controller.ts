@@ -26,6 +26,8 @@ export class LTILaunchesController {
         contextId: body.context_id,
         roles: body.ext_roles.split(',') as RoleKey[],
         contentItemReturnUrl: body.content_item_return_url,
+        canvasApiDomain: body.custom_canvas_api_domain,
+        courseId: body.custom_canvas_course_id,
       }),
     };
     return { data: JSON.stringify(settings) };
@@ -46,6 +48,8 @@ export class LTILaunchesController {
         contextId: body.context_id,
         roles: body.ext_roles.split(',') as RoleKey[],
         contentItemReturnUrl: body.content_item_return_url,
+        canvasApiDomain: body.custom_canvas_api_domain,
+        courseId: body.custom_canvas_course_id,
       }),
       ltiLaunchConfig,
     };

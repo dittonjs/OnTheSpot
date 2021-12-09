@@ -23,8 +23,8 @@ export class RolesGuard implements CanActivate {
 
     const jwtBody: JwtBodyDto = context.switchToHttp().getRequest().jwtBody;
 
+    console.log(jwtBody.roles, requiredRoles);
     if (!jwtBody) return false; // unauthenticated users are not authorized
-
     return !isEmpty(intersection(jwtBody.roles, requiredRoles));
   }
 }

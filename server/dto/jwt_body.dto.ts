@@ -5,4 +5,6 @@ export interface JwtBodyDto {
   contextId: string;
   roles: RoleKey[];
   contentItemReturnUrl?: string;
+  canvasApiDomain?: string;
+  courseId?: string;
 }
