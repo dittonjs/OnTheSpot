@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useLaunchSettings } from '../utils/use_launch_settings';
 import { Assignment } from './lti/assignment/_assignment';
 import { AssignmentSelection } from './lti/assignment_selection/_assignment_selection';
+import { Game } from './lti/game/_game';
 import { Home } from './lti/home/_home';
 
 export const LtiRouter = () => {
@@ -22,10 +23,8 @@ export const LtiRouter = () => {
   }
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Home />} // no token means not logged in
-      />
+      <Route path="/" element={<Home />} />
+      <Route path="/game" element={<Game />} />
     </Routes>
   );
 };

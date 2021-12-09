@@ -3,3 +3,28 @@
 @tailwind components;
 
 @tailwind utilities;
+
+
+/* animating width and height is very slow but does a good enough job I will leave it */
+@keyframes buttongrow {
+  from {
+    border-radius: 12rem;
+    width: 24rem;
+    height: 24rem;
+    border: 4px;
+  }
+  to {
+    border-radius: 0;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+  }
+}
+
+/* #0F2439 */
+
+.grow-button {
+  animation-duration: 1s;
+  animation-name: buttongrow;
+  animation-fill-mode: forwards;
+}

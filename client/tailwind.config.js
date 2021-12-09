@@ -2,7 +2,11 @@ module.exports = {
   mode: 'jit',
   purge: ['*/**/*.jsx'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        blue: '#0F2439',
+      },
+    },
   },
   variants: {},
   plugins: [],
