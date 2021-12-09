@@ -24,10 +24,8 @@ export class LTIGuard implements CanActivate {
     // check nonce
     const validNonce = await this.nonceService.validate(body.oauth_nonce);
     if (!validNonce) return false;
-    console.log('NONCE IS VALID');
 
     if (this.ltiUtil.isValidLTIRequest(req)) {
-      console.log(req.body);
       // try to find existing user
       let user = await this.usersService.findBy({ lmsUserId: body.custom_canvas_user_id }, ['userRoles']);
 
@@ -49,11 +47,10 @@ export class LTIGuard implements CanActivate {
         });
         user = await this.usersService.create(user);
       }
-      console.log(user);
+
       req.user = user;
       return true;
     }
-    console.log("invalid params");
     return false;
   }
 }

@@ -9,8 +9,6 @@ import { RoleKey } from 'server/entities/role.entity';
 import { LTILaunchService } from 'server/providers/services/lti_launch.service';
 import { User } from 'server/entities/user.entity';
 
-// this is kind of a misnomer because we are doing token based auth
-// instead of session based auth
 @Controller()
 export class LTILaunchesController {
   constructor(private jwtService: JwtService, private ltiLaunchesService: LTILaunchService) {}
@@ -39,6 +37,7 @@ export class LTILaunchesController {
   @Render('index')
   async show(@Param('token') token: string, @Body() body: LTILaunchDto, @UserObj() user: User) {
     const ltiLaunchConfig = await this.ltiLaunchesService.findByToken(token);
+    console.log(ltiLaunchConfig);
     const settings = {
       isLTI: true,
       ltiLaunchParams: body,

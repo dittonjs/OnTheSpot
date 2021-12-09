@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { LTILaunch } from 'server/entities/lti_launch.entity';
 import { LTILaunchService } from 'server/providers/services/lti_launch.service';
 import { LTIUtil } from 'server/providers/util/lti.util';
@@ -6,14 +6,16 @@ import * as crypto from 'crypto';
 import * as oauth from 'oauth-signature';
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
+import { Request } from 'express';
 
 @Controller()
 export class LTILaunchesController {
   constructor(private ltiLaunchService: LTILaunchService, private ltiUtil: LTIUtil) {}
 
   @Post('/api/lti_launches')
-  async create(@Body() config: Record<string, any>, @JwtBody() jwtBody: JwtBodyDto) {
+  async create(@Body() config: Record<string, any>, @JwtBody() jwtBody: JwtBodyDto, @Req() req: Request) {
     let ltiLaunch = new LTILaunch();
+    console.log(config, req.body);
     ltiLaunch.config = config;
     ltiLaunch.token = crypto.randomBytes(16).toString('hex');
     ltiLaunch = await this.ltiLaunchService.create(ltiLaunch);
