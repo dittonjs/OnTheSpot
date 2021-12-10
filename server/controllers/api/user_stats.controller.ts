@@ -52,14 +52,10 @@ export class UserStatsController {
     });
 
     const selectedUser = allData[0];
-    if (selectedUser.userStat) {
-      const { userStat } = selectedUser;
-      userStat.timesChosen += 1;
-      await this.userStatsService.update(userStat);
-    } else {
+    if (!selectedUser.userStat) {
       selectedUser.userStat = new UserStat();
       selectedUser.userStat.level = 0;
-      selectedUser.userStat.timesChosen = 1;
+      selectedUser.userStat.timesChosen = 0;
       selectedUser.userStat.timesPresent = 0;
       selectedUser.userStat.lmsUserId = `${selectedUser.id}`;
       selectedUser.userStat.contextId = jwtBody.contextId;

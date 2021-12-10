@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 const hashFunction = (value) => {
   let key = 0;
   let tempChar;
@@ -10,16 +8,18 @@ const hashFunction = (value) => {
   return key;
 };
 
-// O     I   M
-// C E   C E M CR    CG    CB
-// 1 111 1 1 1 11111 11111 11111
+//OO       O     I   M
+//E  E     C E   C E M CR    CG    CB
+//1  11111 1 111 1 1 1 11111 11111 11111
 
-export const Identicon = ({ playerLoginId }) => {
+export const Identicon = ({ playerLoginId, size = 320 }) => {
   const result = hashFunction(playerLoginId).toString(2);
   console.log(result);
   const bits = result.split('');
   console.log(bits);
   bits.shift(); // remove negative sign
+  const ooCorner = bits.shift();
+  const ooEdges = [bits.shift(), bits.shift(), bits.shift(), bits.shift(), bits.shift()];
   const oCorner = bits.shift();
   const oEdges = [bits.shift(), bits.shift(), bits.shift()];
   const iCorner = bits.shift();
@@ -30,16 +30,17 @@ export const Identicon = ({ playerLoginId }) => {
   const blue = parseInt([bits.shift(), bits.shift(), bits.shift(), bits.shift(), bits.shift()].join(''), 2) << 3;
 
   const icon = [
-    [oCorner, ...oEdges, oCorner],
-    [oEdges[2], iCorner, iEdge, iCorner, oEdges[0]],
-    [oEdges[1], iEdge, middle, iEdge, oEdges[1]],
-    [oEdges[0], iCorner, iEdge, iCorner, oEdges[2]],
-    [oCorner, ...[...oEdges].reverse(), oCorner],
+    [ooCorner, ...[...ooEdges].reverse(), ooCorner],
+    [ooEdges[4], oCorner, ...oEdges, oCorner, ooEdges[0]],
+    [ooEdges[3], oEdges[2], iCorner, iEdge, iCorner, oEdges[0], ooEdges[1]],
+    [ooEdges[2], oEdges[1], iEdge, middle, iEdge, oEdges[1], ooEdges[2]],
+    [ooEdges[1], oEdges[0], iCorner, iEdge, iCorner, oEdges[2], ooEdges[3]],
+    [ooEdges[0], oCorner, ...[...oEdges].reverse(), oCorner, ooEdges[4]],
+    [ooCorner, ...ooEdges, ooCorner],
   ];
 
-
   return (
-    <div className="w-96 h-96 flex flex-col">
+    <div className="flex flex-col" style={{ width: size, height: size }}>
       {icon.map((row, i) => (
         <div key={`row_${i}`} className="flex-1 flex-row flex">
           {row.map((val, j) => (
