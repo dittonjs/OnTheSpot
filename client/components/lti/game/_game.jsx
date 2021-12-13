@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { ApiContext } from '../../../utils/api_context';
+import { Loader } from '../common/loader';
 import { PlayerCard } from './player_card';
 
 export const Game = () => {
@@ -54,19 +55,28 @@ export const Game = () => {
     setIsDone(false);
     const { selectedUser } = await api.get('/api/user_stats/pick');
     setSelectedUser(selectedUser);
-  }
+  };
 
   if (isAnimating) {
     return (
-      <div className="flex justify-center w-screen h-screen">
-        <div ref={animatingRef} className="w-96 h-96 rounded-full bg-blue border-4 grow-button" />
+      <div className="max-w-xl">
+        <div className="w-full">
+          <div className="flex justify-center h-screen">
+            <div ref={animatingRef} className="w-96 h-96 rounded-full bg-blue border-4 grow-button" />
+          </div>
+        </div>
       </div>
     );
   }
 
   let content;
   if (!selectedUser) {
-    content = <div>Loading...</div>;
+    content = (
+      <div className="flex">
+        <Loader />
+        <div className="text-4xl flex text-white flex-1 flex-col justify-center">Downloading data...</div>
+      </div>
+    );
   } else {
     content = (
       <PlayerCard
@@ -80,8 +90,12 @@ export const Game = () => {
   }
 
   return (
-    <div className="flex shadow bg-blue w-screen h-screen">
-      <div className="flex-col p-4 flex-1">{content}</div>
+    <div className="max-w-xl">
+      <div className="w-full">
+        <div className="flex shadow bg-blue w-full h-screen">
+          <div className="flex-col p-4 flex-1">{content}</div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Assignment } from './lti/assignment/_assignment';
 import { AssignmentSelection } from './lti/assignment_selection/_assignment_selection';
 import { Game } from './lti/game/_game';
 import { Home } from './lti/home/_home';
+import { Instructor } from './lti/instructor/_instructor';
 
 export const LtiRouter = () => {
   const launchSettings = useLaunchSettings();
@@ -25,6 +26,7 @@ export const LtiRouter = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/game" element={<Game />} />
+      <Route path="/instructor" element={<Instructor />} />
     </Routes>
   );
 };

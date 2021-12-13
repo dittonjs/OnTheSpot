@@ -5,7 +5,6 @@ import { JwtBodyDto } from 'server/dto/jwt_body.dto';
 import { UpdateUserStatDto } from 'server/dto/update_user_stat.dto';
 import { RoleKey } from 'server/entities/role.entity';
 import { UserStat } from 'server/entities/user_stat.entity';
-import { RolesService } from 'server/providers/services/roles.service';
 import { UserStatsService } from 'server/providers/services/user_stats.service';
 import * as superagent from 'superagent';
 
@@ -17,6 +16,30 @@ interface UserInfo {
 @Controller()
 export class UserStatsController {
   constructor(private userStatsService: UserStatsService) {}
+  @Get('/api/user_stats')
+  @Roles(RoleKey.CONTEXT_ADMINISTRATOR, RoleKey.CONTEXT_INSTRUCTOR, RoleKey.CONTEXT_TEACHINGASSISTANT)
+  public async index(@JwtBody() jwtBody: JwtBodyDto) {
+    const { body: users } = await superagent
+      .get(`https://${jwtBody.canvasApiDomain}/api/v1/courses/${jwtBody.courseId}/enrollments`)
+      .set('Authorization', `Bearer ${process.env.CANVAS_TOKEN}`)
+      .query({ type: ['StudentEnrollment'], per_page: 100 });
+
+    const userStats = await this.userStatsService.findAllInContext(jwtBody.contextId);
+    const usersDict = {};
+    users.forEach(({ user }) => {
+      usersDict[`${user.id}`] = user;
+    });
+
+    userStats.forEach((userStat) => {
+      if (usersDict[userStat.lmsUserId]) {
+        usersDict[userStat.lmsUserId].userStat = userStat;
+      }
+    });
+
+    const allData: UserInfo[] = Object.values(usersDict);
+
+    return { userStats: allData };
+  }
 
   @Put('/api/user_stats/:id')
   @Roles(RoleKey.CONTEXT_ADMINISTRATOR, RoleKey.CONTEXT_INSTRUCTOR, RoleKey.CONTEXT_TEACHINGASSISTANT)
@@ -36,8 +59,6 @@ export class UserStatsController {
       .get(`https://${jwtBody.canvasApiDomain}/api/v1/courses/${jwtBody.courseId}/enrollments`)
       .set('Authorization', `Bearer ${process.env.CANVAS_TOKEN}`)
       .query({ type: ['StudentEnrollment'], per_page: 100 });
-
-    console.log(users[0]);
 
     const userStats = await this.userStatsService.findAllInContext(jwtBody.contextId);
     const usersDict = {};

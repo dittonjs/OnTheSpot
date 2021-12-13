@@ -14,9 +14,7 @@ const hashFunction = (value) => {
 
 export const Identicon = ({ playerLoginId, size = 320 }) => {
   const result = hashFunction(playerLoginId).toString(2);
-  console.log(result);
   const bits = result.split('');
-  console.log(bits);
   bits.shift(); // remove negative sign
   const ooCorner = bits.shift();
   const ooEdges = [bits.shift(), bits.shift(), bits.shift(), bits.shift(), bits.shift()];
@@ -31,11 +29,11 @@ export const Identicon = ({ playerLoginId, size = 320 }) => {
 
   const icon = [
     [ooCorner, ...[...ooEdges].reverse(), ooCorner],
-    [ooEdges[4], oCorner, ...oEdges, oCorner, ooEdges[0]],
+    [ooEdges[4], oCorner, ...[...oEdges].reverse(), oCorner, ooEdges[0]],
     [ooEdges[3], oEdges[2], iCorner, iEdge, iCorner, oEdges[0], ooEdges[1]],
     [ooEdges[2], oEdges[1], iEdge, middle, iEdge, oEdges[1], ooEdges[2]],
     [ooEdges[1], oEdges[0], iCorner, iEdge, iCorner, oEdges[2], ooEdges[3]],
-    [ooEdges[0], oCorner, ...[...oEdges].reverse(), oCorner, ooEdges[4]],
+    [ooEdges[0], oCorner, ...oEdges, oCorner, ooEdges[4]],
     [ooCorner, ...ooEdges, ooCorner],
   ];
 
