@@ -23,4 +23,8 @@ export class UserStatsService {
   update(userStat: UserStat) {
     return this.userStatRepository.save(userStat);
   }
+
+  find(id: number) {
+    return this.userStatRepository.findOne(id);
+  }
 }

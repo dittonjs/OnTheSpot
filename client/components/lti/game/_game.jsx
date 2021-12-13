@@ -5,6 +5,8 @@ import { PlayerCard } from './player_card';
 export const Game = () => {
   const api = useContext(ApiContext);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   // const [selectedUser, setSelectedUser] = useState({
   //   id: 1705425,
   //   name: 'Logan Hunt',
@@ -35,6 +37,25 @@ export const Game = () => {
     setSelectedUser(selectedUser);
   }, []);
 
+  const recordAttendance = async (isPresent, didLevelUp) => {
+    const { id, timesChosen, level, timesPresent } = selectedUser.userStat;
+    setIsSaving(true);
+    await api.put(`/api/user_stats/${id}`, {
+      timesChosen: timesChosen + 1,
+      timesPresent: isPresent ? timesPresent + 1 : timesPresent,
+      level: didLevelUp ? level + 1 : level,
+    });
+    setIsSaving(false);
+    setIsDone(true);
+  };
+
+  const startOver = async () => {
+    setSelectedUser(null);
+    setIsDone(false);
+    const { selectedUser } = await api.get('/api/user_stats/pick');
+    setSelectedUser(selectedUser);
+  }
+
   if (isAnimating) {
     return (
       <div className="flex justify-center w-screen h-screen">
@@ -42,13 +63,22 @@ export const Game = () => {
       </div>
     );
   }
+
   let content;
   if (!selectedUser) {
     content = <div>Loading...</div>;
   } else {
-    content = <PlayerCard player={selectedUser} />;
+    content = (
+      <PlayerCard
+        player={selectedUser}
+        recordAttendance={recordAttendance}
+        startOver={startOver}
+        isSaving={isSaving}
+        isDone={isDone}
+      />
+    );
   }
-  console.log(selectedUser);
+
   return (
     <div className="flex shadow bg-blue w-screen h-screen">
       <div className="flex-col p-4 flex-1">{content}</div>

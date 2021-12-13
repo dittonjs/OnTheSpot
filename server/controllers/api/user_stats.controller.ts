@@ -1,9 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { Roles } from 'server/decorators/roles.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
+import { UpdateUserStatDto } from 'server/dto/update_user_stat.dto';
 import { RoleKey } from 'server/entities/role.entity';
 import { UserStat } from 'server/entities/user_stat.entity';
+import { RolesService } from 'server/providers/services/roles.service';
 import { UserStatsService } from 'server/providers/services/user_stats.service';
 import * as superagent from 'superagent';
 
@@ -15,6 +17,17 @@ interface UserInfo {
 @Controller()
 export class UserStatsController {
   constructor(private userStatsService: UserStatsService) {}
+
+  @Put('/api/user_stats/:id')
+  @Roles(RoleKey.CONTEXT_ADMINISTRATOR, RoleKey.CONTEXT_INSTRUCTOR, RoleKey.CONTEXT_TEACHINGASSISTANT)
+  public async update(@Param('id') id: number, @Body() body: UpdateUserStatDto) {
+    const userStat = await this.userStatsService.find(id);
+    userStat.timesChosen = body.timesChosen;
+    userStat.timesPresent = body.timesPresent;
+    userStat.level = body.level;
+    await this.userStatsService.update(userStat);
+    return { userStat };
+  }
 
   @Get('/api/user_stats/pick')
   @Roles(RoleKey.CONTEXT_ADMINISTRATOR, RoleKey.CONTEXT_INSTRUCTOR, RoleKey.CONTEXT_TEACHINGASSISTANT)
@@ -61,7 +74,6 @@ export class UserStatsController {
       selectedUser.userStat.contextId = jwtBody.contextId;
       await this.userStatsService.create(selectedUser.userStat);
     }
-    console.log(allData);
 
     return { selectedUser };
   }
