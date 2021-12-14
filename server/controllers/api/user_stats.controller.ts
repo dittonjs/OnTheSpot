@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { JwtBody } from 'server/decorators/jwt_body.decorator';
 import { Roles } from 'server/decorators/roles.decorator';
 import { JwtBodyDto } from 'server/dto/jwt_body.dto';
@@ -49,6 +49,19 @@ export class UserStatsController {
     userStat.timesPresent = body.timesPresent;
     userStat.level = body.level;
     await this.userStatsService.update(userStat);
+    return { userStat };
+  }
+
+  @Post('/api/user_stats')
+  @Roles(RoleKey.CONTEXT_ADMINISTRATOR, RoleKey.CONTEXT_INSTRUCTOR, RoleKey.CONTEXT_TEACHINGASSISTANT)
+  public async create(@Body() body: { lmsUserId: string }, @JwtBody() jwtBody) {
+    const userStat = new UserStat();
+    userStat.level = 0;
+    userStat.timesChosen = 0;
+    userStat.timesPresent = 0;
+    userStat.lmsUserId = body.lmsUserId;
+    userStat.contextId = jwtBody.contextId;
+    await this.userStatsService.create(userStat);
     return { userStat };
   }
 

@@ -3,7 +3,7 @@ import { UserStatRow } from './user_stat_row';
 import sortBy from 'lodash/sortBy';
 import { SortIcon } from './sort_icon';
 
-export const UserStatTable = ({ users }) => {
+export const UserStatTable = ({ users, updateUser }) => {
   const [sortKey, setSortKey] = useState('name');
   const [sortDirection, setSortDirection] = useState('ASC');
 
@@ -64,7 +64,7 @@ export const UserStatTable = ({ users }) => {
       </thead>
       <tbody>
         {sortedUsers.map((user) => (
-          <UserStatRow user={user} key={user.id} />
+          <UserStatRow user={user} key={user.id} updateUser={updateUser} />
         ))}
       </tbody>
     </table>

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { ApiContext } from '../../../utils/api_context';
 import { UserStatTable } from './user_stat_table';
@@ -11,10 +12,17 @@ export const Instructor = () => {
     setUsers(userStats);
   }, []);
   console.log(users);
+
+  const updateUser = (id, userStat) => {
+    const user = users.find((user) => user.id === id);
+    user.userStat = { ...user.userStat, ...userStat };
+    setUsers([...users]);
+  };
+
   return (
     <div className="flex flex-col">
       <div>Instructor</div>
-      <UserStatTable users={users} />
+      <UserStatTable users={users} updateUser={updateUser} />
     </div>
   );
 };
