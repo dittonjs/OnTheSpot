@@ -41,7 +41,7 @@ export const UserStatRow = ({ user, updateUser }) => {
   };
 
   return (
-    <tr>
+    <tr className="border-b-2">
       <td className="flex">
         <Identicon playerLoginId={user.login_id} size={64} />
         <div className="flex flex-col ml-1 justify-center text-2xl">{name}</div>
